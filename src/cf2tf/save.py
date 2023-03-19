@@ -89,9 +89,4 @@ def create_writer(output: Optional[str]) -> Output:
 
     writer: Output
 
-    if output:
-        writer = Directory(output)
-    else:
-        writer = StdOut()
-
-    return writer
+    return Directory(output) if output else StdOut()

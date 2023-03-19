@@ -62,14 +62,10 @@ def get_code():
     temp_dir = Path(gettempdir())
     repo_path = temp_dir.joinpath("terraform_src")
 
-    if repo_path.exists():
-
-        if repo_path.joinpath(".git").exists():
-            # todo Need to check to make sure the remote is correct
-            click.echo(" existing repo found.")
-            repo = Repo(repo_path)
-            return repo
-
+    if repo_path.exists() and repo_path.joinpath(".git").exists():
+        # todo Need to check to make sure the remote is correct
+        click.echo(" existing repo found.")
+        return Repo(repo_path)
     print(f"// Cloning Terraform src code to {repo_path}...", end="")
 
     repo_path.mkdir(exist_ok=True)

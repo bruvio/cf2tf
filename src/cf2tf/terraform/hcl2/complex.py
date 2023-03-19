@@ -76,6 +76,6 @@ def render_tf_map(items: Dict[PrimitiveTypes, TerraformType], indent=0):
         # if isinstance(value, ListType):
         #     result += f"\n{spacing}{name} = {value.render(indent)}"
 
-        result = result + f"\n{spacing}{name} = {value.render(indent)}"
+        result = f"{result}\n{spacing}{name} = {value.render(indent)}"
 
-    return result + f"\n{rear_brace}}}"
+    return f"{result}\n{rear_brace}}}"

@@ -35,10 +35,10 @@ class Block:
         valid_attributes: Optional[List[str]] = None,
     ) -> None:
         self.block_type = block_type
-        self.labels = labels if labels else ()
-        self.arguments = arguments if arguments else {}
-        self.valid_arguments = valid_arguments if valid_arguments else []
-        self.valid_attributes = valid_attributes if valid_attributes else []
+        self.labels = labels or ()
+        self.arguments = arguments or {}
+        self.valid_arguments = valid_arguments or []
+        self.valid_attributes = valid_attributes or []
 
     def base_ref(self):
         return f"{self.block_type}.{'.'.join(self.labels)}".replace('"', "")
@@ -75,9 +75,7 @@ class Block:
 
         block_args = render_arguments(self.arguments, indent)
 
-        block = f"""{brace_space}{self.block_type}{label_space}{block_labels} {{{arg_newline}{block_args}{arg_newline}{brace_space}}}"""
-
-        return block
+        return f"""{brace_space}{self.block_type}{label_space}{block_labels} {{{arg_newline}{block_args}{arg_newline}{brace_space}}}"""
 
 
 def render_arguments(args: Arguments, indent=0):

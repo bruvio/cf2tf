@@ -32,10 +32,11 @@ def get_action(pull_request: str) -> str:
         f"https://api.github.com/repos/{owner}/{repo}/pulls/{pull_request}"
     )
 
-    label = [
-        label["name"] for label in response["labels"] if label["name"] in valid_labels
+    return [
+        label["name"]
+        for label in response["labels"]
+        if label["name"] in valid_labels
     ][0]
-    return label
 
 
 def set_output(name: str, value: str):
