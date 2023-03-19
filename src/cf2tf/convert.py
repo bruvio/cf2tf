@@ -122,15 +122,11 @@ class TemplateConverter:
 
         for section in sections:
 
-            section_resources = self.manifest.get(section)
-
-            if section_resources:
+            if section_resources := self.manifest.get(section):
                 section_map: Dict[str, Dict[str, Any]] = dict(section_resources)  # type: ignore
 
                 if resource_name in section_map:
-                    resource = section_map[resource_name]
-                    return resource
-
+                    return section_map[resource_name]
         return None
 
     def convert_to_tf(self, manifest: Manifest):
@@ -395,8 +391,7 @@ def get_converter(
 ) -> Callable[[CFResources], List[Block]]:
     conveter_name = f"convert_{section_name.lower()}"
 
-    converter = getattr(item, conveter_name)
-    return converter
+    return getattr(item, conveter_name)
 
 
 def find_section(tf_attribute_name: str, docs_path: Path):
@@ -464,12 +459,7 @@ def contains_functions(self, data: Dict[str, Any]):
 
     functions = ["Ref", "Fn::"]
 
-    for key in list(data):
-
-        if key in functions:
-            return True
-
-    return False
+    return any(key in functions for key in list(data))
 
 
 def props_to_args(

@@ -71,9 +71,7 @@ class Template:
             Template: A Template object ready for testing.
         """
 
-        with open(template_path) as f:
-            raw = f.read()
-
+        raw = Path(template_path).read_text()
         tmp_yaml = load_yaml(raw)
 
         tmp_str = dump_yaml(tmp_yaml)

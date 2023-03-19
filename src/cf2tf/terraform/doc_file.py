@@ -75,7 +75,7 @@ def parse_items(file: TextIOWrapper):
             if not match:
                 raise Exception(f"Did not find an item to parse in {line}")
 
-            attribute = match.group(1)
+            attribute = match[1]
 
             attributes.append(attribute)
 
@@ -120,4 +120,3 @@ def find_section(name: str, file: TextIOWrapper):
         if not line:
             log.debug(f"Unable to find section {name} in {file.name}")
             raise Exception()
-            return None

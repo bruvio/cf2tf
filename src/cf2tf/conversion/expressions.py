@@ -75,7 +75,7 @@ def cidr(_tc: "TemplateConverter", values: Any):
             f"Fn::Cidr - The value must be a List, not {type(values).__name__}."
         )
 
-    if not len(values) == 3:
+    if len(values) != 3:
         raise ValueError(
             (
                 "Fn::Cidr - The value must contain "
@@ -146,7 +146,7 @@ def equals(_tc: "TemplateConverter", values: Any):
             f"Fn::Equals - The values must be a List, not {type(values).__name__}."
         )
 
-    if not len(values) == 2:
+    if len(values) != 2:
         raise ValueError("Fn::Equals - The values must contain two values to compare.")
 
     return LiteralType(f"{values[0]} == {values[1]}")
@@ -173,7 +173,7 @@ def if_(_tc: "TemplateConverter", values: Any):
             f"Fn::If - The values must be a List, not {type(values).__name__}."
         )
 
-    if not len(values) == 3:
+    if len(values) != 3:
         raise ValueError(
             (
                 "Fn::If - The values must contain "
@@ -214,7 +214,7 @@ def not_(_tc: "TemplateConverter", values: Any):
             f"Fn::Not - The values must be a List, not {type(values).__name__}."
         )
 
-    if not len(values) == 1:
+    if len(values) != 1:
         raise ValueError("Fn::Not - The values must contain a single Condition.")
 
     condition: Any = values[0]
@@ -309,7 +309,7 @@ def find_in_map(template: "TemplateConverter", values: Any):
             f"Fn::FindInMap - The values must be a List, not {type(values).__name__}."
         )
 
-    if not len(values) == 3:
+    if len(values) != 3:
         raise ValueError(
             (
                 "Fn::FindInMap - The values must contain "
@@ -371,7 +371,7 @@ def get_att(template: "TemplateConverter", values: Any):
         raise TypeError(
             f"Fn::GetAtt - The values must be a List, not {type(values).__name__}."
         )
-    if not len(values) == 2:
+    if len(values) != 2:
         raise ValueError(
             (
                 "Fn::GetAtt - The values must contain "
@@ -533,7 +533,7 @@ def join(_tc: "TemplateConverter", values: Any):
             f"Fn::Join - The values must be a List, not {type(values).__name__}."
         )
 
-    if not len(values) == 2:
+    if len(values) != 2:
         raise ValueError(
             (
                 "Fn::Join - The values must contain "
@@ -607,11 +607,7 @@ def select(_tc: "TemplateConverter", values: Any):
             "Fn::Select - The first value must be a Number and the second a List or String."
         )
 
-    if isinstance(items, str):
-        items = items
-    else:
-        items = _terraform_list(items)
-
+    items = items if isinstance(items, str) else _terraform_list(items)
     try:
         return LiteralType(f"element({items}, {index})")
     except IndexError:
@@ -639,7 +635,7 @@ def split(_tc: "TemplateConverter", values: Any):
             f"Fn::Split - The values must be a List, not {type(values).__name__}."
         )
 
-    if not len(values) == 2:
+    if len(values) != 2:
         raise ValueError(
             (
                 "Fn::Split - The values must contain "
@@ -796,15 +792,11 @@ def ref(template: "TemplateConverter", var_name: str):
 
         return handle_pseduo_var(template, var_name)
 
-    cf_param = template.resource_lookup(var_name, ["Parameters"])
-
-    if cf_param:
+    if cf_param := template.resource_lookup(var_name, ["Parameters"]):
         tf_name = cf2tf.convert.pascal_to_snake(var_name)
         return LiteralType(f"var.{tf_name}")
 
-    cf_resource = template.resource_lookup(var_name, ["Resources"])
-
-    if cf_resource:
+    if cf_resource := template.resource_lookup(var_name, ["Resources"]):
         cf_resource_type = cf_resource.get("Type", "")
         docs_path = template.search_manager.find(cf_resource_type)
         _, valid_attributes = doc_file.parse_attributes(docs_path)

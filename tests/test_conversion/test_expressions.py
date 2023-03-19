@@ -427,7 +427,7 @@ def test_get_azs(fake_tc: TemplateConverter):
     ]
 
     # Make sure the datasource was added correctly
-    assert len(data_blocks) != 0 and data_blocks[0].name == '"available"'
+    assert data_blocks and data_blocks[0].name == '"available"'
 
 
 join_tests = [
